@@ -182,5 +182,11 @@ php-fpm -y /tmp/php-fpm.conf
 # =============================================================
 # STEP 9: Start Nginx on Railway-assigned port
 # =============================================================
-sed "s/PORT_PLACEHOLDER/${PORT:-8080}/g" /app/nginx.conf > /tmp/nginx.conf
+# Find mime.types in Nix store (Nixpacks puts it in /nix/store)
+MIME_PATH=$(find /nix/store -name mime.types -path "*/nginx/*" 2>/dev/null | head -1)
+[ -z "$MIME_PATH" ] && MIME_PATH="/etc/nginx/mime.types"
+
+sed -e "s|PORT_PLACEHOLDER|${PORT:-8080}|g" \
+    -e "s|include /etc/nginx/mime.types;|include ${MIME_PATH};|g" \
+    /app/nginx.conf > /tmp/nginx.conf
 nginx -c /tmp/nginx.conf -g 'daemon off;'
