@@ -72,7 +72,19 @@ if [ -z "$DB_HOST" ] || [ -z "$DB_DATABASE" ]; then
 fi
 
 # =============================================================
-# STEP 3: Log database config (safe, no password)
+# STEP 3: Set APP_URL dynamically for Railway
+# =============================================================
+if [ -n "$RAILWAY_PUBLIC_DOMAIN" ]; then
+  export APP_URL="https://${RAILWAY_PUBLIC_DOMAIN}"
+  echo "APP_URL dynamically set to ${APP_URL}"
+elif [ -z "$APP_URL" ] || [ "$APP_URL" = "http://localhost" ]; then
+  echo "WARNING: APP_URL is not set or is 'http://localhost'."
+  echo "  @vite() will generate wrong asset URLs."
+  echo "  Set APP_URL in Railway Variables."
+fi
+
+# =============================================================
+# STEP 4: Log database config (safe, no password)
 # =============================================================
 DB_URL_MASKED=$(echo "$DB_URL" | sed 's|://[^:]*:[^@]*@|://***:***@|')
 echo "=========================================="
@@ -84,7 +96,7 @@ echo " DB_USERNAME:   ${DB_USERNAME}"
 echo "=========================================="
 
 # =============================================================
-# STEP 4: DNS resolution test
+# STEP 5: DNS resolution test
 # =============================================================
 echo "Testing DNS resolution for '${DB_HOST}'..."
 HOST_IP=$(getent hosts "${DB_HOST}" 2>/dev/null | awk '{ print $1 }' | head -1)
@@ -95,7 +107,7 @@ else
 fi
 
 # =============================================================
-# STEP 5: TCP connectivity test
+# STEP 6: TCP connectivity test
 # =============================================================
 echo "Testing TCP connection to ${DB_HOST}:${DB_PORT}..."
 if timeout 5 bash -c "echo > /dev/tcp/${DB_HOST}/${DB_PORT}" 2>/dev/null; then
@@ -105,7 +117,7 @@ else
 fi
 
 # =============================================================
-# STEP 6: Wait for database to be ready
+# STEP 7: Wait for database to be ready
 # =============================================================
 echo "Waiting for database connection (up to 60 seconds)..."
 DB_READY=false
@@ -147,7 +159,7 @@ if [ "$DB_READY" != "true" ]; then
 fi
 
 # =============================================================
-# STEP 7: Clear Laravel cache and run migrations
+# STEP 8: Clear Laravel cache and run migrations
 # =============================================================
 php artisan config:clear
 php artisan cache:clear
@@ -155,19 +167,19 @@ php artisan migrate --force
 php artisan storage:link
 
 # =============================================================
-# STEP 8: Fix permissions for Laravel storage
+# STEP 9: Fix permissions for Laravel storage
 # =============================================================
 chmod -R 777 /app/storage /app/bootstrap/cache 2>/dev/null || true
 
 # =============================================================
-# STEP 8b: Test PHP and Laravel bootstrap
+# STEP 10: Test PHP and Laravel bootstrap
 # =============================================================
 echo "PHP version: $(php -v 2>&1 | head -1)"
 echo "Testing artisan..."
 php artisan about 2>&1 | head -10 || echo "artisan about FAILED"
 
 # =============================================================
-# STEP 9: Generate PHP-FPM config and start it
+# STEP 11: Generate PHP-FPM config and start it
 # =============================================================
 cat > /tmp/php-fpm.conf << 'PHPFPMCONF'
 [global]
@@ -201,7 +213,7 @@ else
 fi
 
 # =============================================================
-# STEP 10: Generate nginx.conf and start Nginx
+# STEP 12: Generate nginx.conf and start Nginx
 # =============================================================
 NGINX_PORT="${PORT:-8080}"
 cat > /tmp/nginx.conf << NGINXCONF
@@ -295,6 +307,7 @@ else
   echo ""
   echo "APP_KEY set: $([ -n "$APP_KEY" ] && echo 'YES' || echo 'NO')"
   echo "APP_KEY length: ${#APP_KEY}"
+  echo "APP_URL: ${APP_URL:-not set}"
   echo "APP_ENV: ${APP_ENV:-not set}"
   echo "APP_DEBUG: ${APP_DEBUG:-not set}"
   echo ""
