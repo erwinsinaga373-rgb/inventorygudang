@@ -155,7 +155,12 @@ php artisan migrate --force
 php artisan storage:link
 
 # =============================================================
-# STEP 8: Generate PHP-FPM config and start it
+# STEP 8: Fix permissions for Laravel storage
+# =============================================================
+chmod -R 775 /app/storage /app/bootstrap/cache 2>/dev/null || true
+
+# =============================================================
+# STEP 9: Generate PHP-FPM config and start it
 # =============================================================
 cat > /tmp/php-fpm.conf << 'PHPFPMCONF'
 [global]
@@ -188,7 +193,7 @@ else
 fi
 
 # =============================================================
-# STEP 9: Generate nginx.conf and start Nginx
+# STEP 10: Generate nginx.conf and start Nginx
 # =============================================================
 NGINX_PORT="${PORT:-8080}"
 cat > /tmp/nginx.conf << NGINXCONF
