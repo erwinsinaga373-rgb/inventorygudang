@@ -162,7 +162,6 @@ cat > /tmp/php-fpm.conf << 'PHPFPMCONF'
 pid = /var/run/php-fpm.pid
 error_log = /var/log/php-fpm.log
 log_level = notice
-daemonize = yes
 
 [www]
 listen = 127.0.0.1:9000
@@ -174,10 +173,11 @@ pm.max_children = 10
 pm.start_servers = 2
 pm.min_spare_servers = 1
 pm.max_spare_servers = 5
+catch_workers_output = yes
 php_admin_value[error_log] = /var/log/php-fpm-www.log
 PHPFPMCONF
 
-php-fpm -y /tmp/php-fpm.conf
+php-fpm -y /tmp/php-fpm.conf -t && php-fpm -y /tmp/php-fpm.conf -D
 
 # =============================================================
 # STEP 9: Generate nginx.conf and start Nginx
