@@ -185,6 +185,7 @@ pm.max_children = 10
 pm.start_servers = 2
 pm.min_spare_servers = 1
 pm.max_spare_servers = 5
+clear_env = no
 catch_workers_output = yes
 php_admin_value[error_log] = /var/log/php-fpm-www.log
 PHPFPMCONF
