@@ -16,12 +16,21 @@
   
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-  <link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.4.1/css/dataTables.dateTime.min.css">
+ <link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.4.1/css/dataTables.dateTime.min.css">
 
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+
+<style>
+    /* Hanya memengaruhi dropdown jumlah data DataTables */
+    .dataTables_wrapper .dataTables_length select {
+        min-width: 70px !important;
+        padding-right: 20px !important;
+        height: 38px !important;
+    }
+</style>
+
 </head>
-
 <body>
   <div id="app">
     <div class="main-wrapper main-wrapper-1">
