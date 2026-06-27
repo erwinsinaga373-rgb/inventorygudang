@@ -276,8 +276,24 @@ echo "HTTP status: ${HTTP_CODE}"
 if [ "${HTTP_CODE}" = "200" ] || [ "${HTTP_CODE}" = "302" ] || [ "${HTTP_CODE}" = "301" ]; then
   echo "Application is responding!"
 else
+  echo "=== LARAVEL DIAGNOSTIC ==="
   echo "Response body:"
   cat /tmp/healthcheck.html 2>/dev/null || true
+  echo ""
+  echo "APP_KEY set: $([ -n "$APP_KEY" ] && echo 'YES' || echo 'NO')"
+  echo "APP_KEY length: ${#APP_KEY}"
+  echo "APP_ENV: ${APP_ENV:-not set}"
+  echo "APP_DEBUG: ${APP_DEBUG:-not set}"
+  echo ""
+  echo "Laravel logs:"
+  cat /app/storage/logs/laravel.log 2>/dev/null | tail -20 || echo "(no laravel log)"
+  echo ""
+  echo "PHP errors:"
+  cat /var/log/php-fpm-www.log 2>/dev/null | tail -10 || echo "(no php-fpm log)"
+  echo ""
+  echo "Nginx errors:"
+  cat /var/log/nginx/error.log 2>/dev/null | tail -10 || echo "(no nginx error log)"
+  echo "=== END DIAGNOSTIC ==="
 fi
 
 wait $NGINX_PID
