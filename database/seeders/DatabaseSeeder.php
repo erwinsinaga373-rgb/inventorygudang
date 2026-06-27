@@ -27,21 +27,21 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         User::create([
-            'name'      => 'Super Admin',
-            'email'     => 'superadmin@gmail.com',
+            'name'      => 'Owner',
+            'email'     => 'owner@gmail.com',
             'password'  => bcrypt('1234'),
             'role_id'   => 1
         ]);
 
         User::create([
-            'name'      => 'Staff Gudang',
-            'email'     => 'staffgudang@gmail.com',
+            'name'      => 'Kepala Gudang',
+            'email'     => 'kepalagudang@gmail.com',
             'password'  => bcrypt('1234'),
             'role_id'   => 2
         ]);
 
         User::create([
-            'name'      => 'Admin',
+            'name'      => 'Admin Gudang',
             'email'     => 'admin@gmail.com',
             'password'  => bcrypt('1234'),
             'role_id'   => 3
@@ -88,17 +88,17 @@ class DatabaseSeeder extends Seeder
         ]);
         
         Role::create([
-            'role'      => 'superadmin',
-            'deskripsi' => 'Superadmin memiliki kendali penuh pada aplikasi termasuk manajemen User'
+            'role'      => 'owner',
+            'deskripsi' => 'Owner / Superadmin memiliki kendali penuh pada aplikasi termasuk manajemen User'
         ]);
 
         Role::create([
-            'role'      => 'staff gudang',
+            'role'      => 'kepala gudang',
             'deskripsi' => 'Kepala gudang memilki akses untuk mengelola dan mencetak laporan stok, barang masuk, dan barang keluar'
         ]);
 
         Role::create([
-            'role'      => 'admin gudang',
+            'role'      => 'admin',
             'deskripsi' => 'Admin gudang memilki akses untuk mengelola stok,  barang masuk, barang keluar dan laporannya'
         ]);
      

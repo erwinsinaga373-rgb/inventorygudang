@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('supplier');
             $table->text('alamat');
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

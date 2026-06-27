@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('satuan');
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->constrained();
         });
     }
 

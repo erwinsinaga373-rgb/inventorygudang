@@ -1,4 +1,4 @@
-@extends('app') @section('content')
+@extends('layouts.app') @section('content')
 <div class="main-content-inside py-4">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -11,7 +11,7 @@
                     <thead>
                         <tr>
                             <th style="width: 5%">No</th>
-                            <th>Kode Produk</th>
+                            <th>Kode Barang</th>
                             <th>Nama Barang / Inventaris</th>
                             <th>Sisa Stok</th>
                         </tr>
@@ -20,11 +20,11 @@
                         @forelse($hasilCari as $index => $barang)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td><span class="badge badge-success">{{ $barang->kode_produk }}</span></td>
+                                <td><span class="badge badge-success">{{ $barang->kode_barang }}</span></td>
                                 <td>{{ $barang->nama_barang }}</td>
                                 <td>
-                                    @if($barang->stok <= 12)
-                                        <span class="text-danger font-weight-bold">⚠️ {{ $barang->stok }} (Kritis)</span>
+                                    @if($barang->stok <= $barang->stok_minimum)
+                                        <span class="text-danger font-weight-bold">{{ $barang->stok }} (Kritis)</span>
                                     @else
                                         {{ $barang->stok }}
                                     @endif

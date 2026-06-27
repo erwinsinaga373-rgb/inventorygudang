@@ -75,13 +75,14 @@ class BarangKeluarController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
+        $kodeTransaksi = 'BK-' . date('Ymd') . '-' . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
 
         $barangKeluar = BarangKeluar::create([
             'tanggal_keluar'    => $request->tanggal_keluar,
             'nama_barang'       => $request->nama_barang,
             'jumlah_keluar'     => $request->jumlah_keluar,
             'customer_id'       => $request->customer_id,
-            'kode_transaksi'    => $request->kode_transaksi,
+            'kode_transaksi'    => $kodeTransaksi,
             'user_id'           => auth()->user()->id
         ]); 
 

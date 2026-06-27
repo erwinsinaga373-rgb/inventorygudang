@@ -71,17 +71,18 @@ class BarangController extends Controller
             'satuan_id.required'     => 'Pilih Jenis Barang !'
         ]);
 
+        $kode_barang = 'BRG-' . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
+        $gambar = null;
+
         if ($request->hasFile('gambar')) 
         {
             $path       = 'gambar-barang/';
             $file       = $request->file('gambar');
-            $fileName   = $file->getClientOriginalName();
+            $fileName   = $kode_barang . '.' . $file->getClientOriginalExtension();
             $gambar     = $file->storeAs($path, $fileName, 'public');
-        } else{
-            $gambar = null;
+            $gambar     = $path . $fileName;
         }
-          
-        $kode_barang = 'BRG-' . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
+
         $request->merge([
             'kode_barang'   => $kode_barang,
             'gambar'        => $gambar,
@@ -97,7 +98,7 @@ class BarangController extends Controller
             'deskripsi'    => $request->deskripsi,
             'user_id'      => $request->user_id,
             'kode_barang'  => $request->kode_barang,
-            'gambar'       => $path . $fileName,
+            'gambar'       => $gambar,
             'stok_minimum' => $request->stok_minimum,
             'stok_maksimum'=> $request->stok_maksimum,
             'jenis_id'     => $request->jenis_id,
@@ -162,12 +163,15 @@ class BarangController extends Controller
     
         if($request->hasFile('gambar')){
             if($barang->gambar) {
-                unlink('.'.Storage::url($barang->gambar));
+                $oldPath = public_path('storage/' . $barang->gambar);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
             $path       = 'gambar-barang/';
             $file       = $request->file('gambar');
-            $fileName   = $file->getClientOriginalName();
-            $gambar     = $file->storeAs($path, $fileName, 'public');
+            $fileName   = $barang->kode_barang . '.' . $file->getClientOriginalExtension();
+            $file->storeAs($path, $fileName, 'public');
             $path      .= $fileName; 
         } else {
             $validator = Validator::make($request->all(), [
@@ -219,7 +223,12 @@ class BarangController extends Controller
      */
     public function destroy(Barang $barang)
     {
-        unlink('.'.Storage::url($barang->gambar));
+        if ($barang->gambar) {
+            $path = public_path('storage/' . $barang->gambar);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
     
         Barang::destroy($barang->id);
 

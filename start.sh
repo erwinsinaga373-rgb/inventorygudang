@@ -84,6 +84,12 @@ elif [ -z "$APP_URL" ] || [ "$APP_URL" = "http://localhost" ]; then
 fi
 
 # =============================================================
+# STEP 3b: Set production environment defaults
+# =============================================================
+export APP_ENV="${APP_ENV:-production}"
+export APP_DEBUG="${APP_DEBUG:-false}"
+
+# =============================================================
 # STEP 4: Log database config (safe, no password)
 # =============================================================
 DB_URL_MASKED=$(echo "$DB_URL" | sed 's|://[^:]*:[^@]*@|://***:***@|')
@@ -159,10 +165,16 @@ if [ "$DB_READY" != "true" ]; then
 fi
 
 # =============================================================
-# STEP 8: Clear Laravel cache and run migrations
+# STEP 8: Clear & rebuild Laravel caches, run migrations
 # =============================================================
 php artisan config:clear
 php artisan cache:clear
+
+# Rebuild caches with correct production values
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
 php artisan migrate --force
 php artisan storage:link
 

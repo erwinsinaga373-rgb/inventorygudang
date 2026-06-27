@@ -4,11 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jenis;
 use Illuminate\Http\Request;
-use function Pest\Laravel\json;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Validator;
 
 class JenisController extends Controller

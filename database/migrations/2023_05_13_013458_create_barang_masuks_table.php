@@ -17,8 +17,8 @@ return new class extends Migration
             $table->date('tanggal_masuk');
             $table->string('nama_barang');
             $table->integer('jumlah_masuk');
-            $table->foreignId('supplier_id');
-            $table->foreignId('user_id');
+            $table->foreignId('supplier_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

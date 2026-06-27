@@ -66,12 +66,14 @@ class BarangMasukController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
+        $kodeTransaksi = 'BM-' . date('Ymd') . '-' . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
+
         $barangMasuk = BarangMasuk::create([
             'tanggal_masuk'     => $request->tanggal_masuk,
             'nama_barang'       => $request->nama_barang,
             'jumlah_masuk'      => $request->jumlah_masuk,
             'supplier_id'       => $request->supplier_id,
-            'kode_transaksi'    => $request->kode_transaksi,
+            'kode_transaksi'    => $kodeTransaksi,
             'user_id'           => auth()->user()->id
         ]); 
 

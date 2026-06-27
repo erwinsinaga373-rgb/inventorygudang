@@ -95,12 +95,10 @@ Route::middleware('auth')->group(function () {
     
         Route::get('/api/barang-masuk/', [BarangMasukController::class, 'getAutoCompleteData']);
         Route::get('/barang-masuk/get-data', [BarangMasukController::class, 'getDataBarangMasuk']);
-        Route::get('/api/satuan/', [BarangMasukController::class, 'getSatuan']);
         Route::resource('/barang-masuk', BarangMasukController::class);
     
         Route::get('/api/barang-keluar/', [BarangKeluarController::class, 'getAutoCompleteData']);
         Route::get('/barang-keluar/get-data', [BarangKeluarController::class, 'getDataBarangKeluar']);
-        Route::get('/api/satuan/', [BarangKeluarController::class, 'getSatuan']);
         Route::resource('/barang-keluar', BarangKeluarController::class);
     });
 

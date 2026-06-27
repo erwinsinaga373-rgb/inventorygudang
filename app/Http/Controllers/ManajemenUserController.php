@@ -49,12 +49,14 @@ class ManajemenUserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name'      => 'required',
-            'email'     => 'required',
+            'email'     => 'required|email|unique:users,email',
             'password'  => 'required|min:4',
             'role_id'   => 'required'
         ], [
             'name.required'     => 'Form Nama Wajib Di isi !',
             'email.required'    => 'Form Email Wajib Di isi !',
+            'email.email'       => 'Format Email Tidak Valid !',
+            'email.unique'      => 'Email sudah digunakan !',
             'password.required' => 'Form Password Wajib Di isi !',
             'password.min'      => 'Password Minimal 4 Huruf/Angka/Karakter !',
             'role_id.required'  => 'Tentukan Role/Hak Akses !',
@@ -108,11 +110,13 @@ class ManajemenUserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name'      => 'required',
-            'email'     => 'required',
+            'email'     => 'required|email|unique:users,email,' . $id,
             'role_id'   => 'required'
         ], [
             'name.required'     => 'Form Nama Wajib Di isi !',
             'email.required'    => 'Form Email Wajib Di isi !',
+            'email.email'       => 'Format Email Tidak Valid !',
+            'email.unique'      => 'Email sudah digunakan !',
             'role_id.required'  => 'Tentukan Role/Hak Akses !',
         ]);
 
