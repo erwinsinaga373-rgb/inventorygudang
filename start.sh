@@ -40,6 +40,11 @@ DB_HOST=$(echo "$DB_PARSE"     | sed -n '3p')
 DB_PORT=$(echo "$DB_PARSE"     | sed -n '4p')
 DB_DATABASE=$(echo "$DB_PARSE" | sed -n '5p')
 
+# Fallback if database name missing from URL
+if [ -z "$DB_DATABASE" ]; then
+  DB_DATABASE="${MYSQL_DATABASE:-railway}"
+fi
+
 # Export so Laravel picks them up
 export DB_CONNECTION=mysql
 [ -n "$DB_USERNAME" ] && export DB_USERNAME  || true
