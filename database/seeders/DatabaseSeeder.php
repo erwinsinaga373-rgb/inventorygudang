@@ -14,42 +14,47 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        Role::firstOrCreate(['role' => 'owner'], [
-            'deskripsi' => 'Owner / Superadmin memiliki kendali penuh pada aplikasi termasuk manajemen User'
-        ]);
+        // === ROLES ===
+        // Handle old role names (pre-fix) and new names
+        $roles = [
+            ['role' => 'owner',         'old_role' => 'superadmin',   'deskripsi' => 'Owner / Superadmin memiliki kendali penuh pada aplikasi termasuk manajemen User'],
+            ['role' => 'kepala gudang', 'old_role' => 'staff gudang', 'deskripsi' => 'Kepala gudang memilki akses untuk mengelola dan mencetak laporan stok, barang masuk, dan barang keluar'],
+            ['role' => 'admin',         'old_role' => 'admin gudang', 'deskripsi' => 'Admin gudang memilki akses untuk mengelola stok, barang masuk, barang keluar dan laporannya'],
+        ];
 
-        Role::firstOrCreate(['role' => 'kepala gudang'], [
-            'deskripsi' => 'Kepala gudang memilki akses untuk mengelola dan mencetak laporan stok, barang masuk, dan barang keluar'
-        ]);
+        foreach ($roles as $r) {
+            $role = Role::where('role', $r['old_role'])->first();
+            if ($role) {
+                $role->update(['role' => $r['role'], 'deskripsi' => $r['deskripsi']]);
+            } else {
+                Role::firstOrCreate(['role' => $r['role']], ['deskripsi' => $r['deskripsi']]);
+            }
+        }
 
-        Role::firstOrCreate(['role' => 'admin'], [
-            'deskripsi' => 'Admin gudang memilki akses untuk mengelola stok, barang masuk, barang keluar dan laporannya'
-        ]);
+        // === USERS ===
+        $users = [
+            ['name' => 'Owner',         'email' => 'owner@gmail.com',       'role_id' => Role::where('role', 'owner')->value('id')],
+            ['name' => 'Kepala Gudang', 'email' => 'kepalagudang@gmail.com', 'role_id' => Role::where('role', 'kepala gudang')->value('id')],
+            ['name' => 'Admin Gudang',  'email' => 'admin@gmail.com',        'role_id' => Role::where('role', 'admin')->value('id')],
+        ];
 
-        User::firstOrCreate(['email' => 'owner@gmail.com'], [
-            'name'      => 'Owner',
-            'password'  => bcrypt('1234'),
-            'role_id'   => 1
-        ]);
+        foreach ($users as $u) {
+            User::firstOrCreate(['email' => $u['email']], [
+                'name'     => $u['name'],
+                'password' => bcrypt('1234'),
+                'role_id'  => $u['role_id'],
+            ]);
+        }
 
-        User::firstOrCreate(['email' => 'kepalagudang@gmail.com'], [
-            'name'      => 'Kepala Gudang',
-            'password'  => bcrypt('1234'),
-            'role_id'   => 2
-        ]);
-
-        User::firstOrCreate(['email' => 'admin@gmail.com'], [
-            'name'      => 'Admin Gudang',
-            'password'  => bcrypt('1234'),
-            'role_id'   => 3
-        ]);
-
+        // === JENIS ===
         Jenis::firstOrCreate(['jenis_barang' => 'pupuk cair'], ['user_id' => 1]);
         Jenis::firstOrCreate(['jenis_barang' => 'pupuk Kimia'], ['user_id' => 1]);
 
+        // === SATUAN ===
         Satuan::firstOrCreate(['satuan' => 'Kwintal'], ['user_id' => 1]);
         Satuan::firstOrCreate(['satuan' => 'Liter'], ['user_id' => 1]);
 
+        // === SUPPLIER ===
         Supplier::firstOrCreate(['supplier' => 'PT Petrokimia Gresik'], [
             'alamat'  => 'Gresik, Jawa Timur',
             'user_id' => 1
@@ -59,6 +64,7 @@ class DatabaseSeeder extends Seeder
             'user_id' => 1
         ]);
 
+        // === CUSTOMER ===
         Customer::firstOrCreate(['customer' => 'CV Konco Tani'], [
             'alamat'  => 'Suronegaran, Jawa Tengah',
             'user_id' => 1
