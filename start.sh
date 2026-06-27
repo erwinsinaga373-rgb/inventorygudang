@@ -24,16 +24,23 @@ fi
 
 export DATABASE_URL="$DB_URL"
 
-# Parse URL components
-# Format: mysql://user:password@host:port/database
-DB_USERNAME=$(echo "$DB_URL" | sed -n 's|mysql://\([^:]*\):.*|\1|p')
-DB_PASSWORD=$(echo "$DB_URL" | sed -n 's|mysql://[^:]*:\([^@]*\)@.*|\1|p')
-DB_HOST=$(echo "$DB_URL"     | sed -n 's|mysql://[^@]*@\([^:/]*\).*|\1|p')
-DB_PORT=$(echo "$DB_URL"     | sed -n 's|mysql://[^@]*@[^:/]*:\([^/]*\)/.*|\1|p')
-DB_DATABASE=$(echo "$DB_URL" | sed -n 's|.*/\([^?]*\)|\1|p')
+# Parse URL using PHP's parse_url() — far more reliable than sed
+DB_PARSE=$(php -r '
+  $u = parse_url($argv[1]);
+  echo ($u["user"] ?? "") . "\n";
+  echo ($u["pass"] ?? "") . "\n";
+  echo ($u["host"] ?? "") . "\n";
+  echo ($u["port"] ?? "3306") . "\n";
+  echo ltrim($u["path"] ?? "", "/") . "\n";
+' "$DB_URL")
 
-[ -z "$DB_PORT" ] && DB_PORT="3306"
+DB_USERNAME=$(echo "$DB_PARSE" | sed -n '1p')
+DB_PASSWORD=$(echo "$DB_PARSE" | sed -n '2p')
+DB_HOST=$(echo "$DB_PARSE"     | sed -n '3p')
+DB_PORT=$(echo "$DB_PARSE"     | sed -n '4p')
+DB_DATABASE=$(echo "$DB_PARSE" | sed -n '5p')
 
+# Export so Laravel picks them up
 export DB_CONNECTION=mysql
 [ -n "$DB_USERNAME" ] && export DB_USERNAME  || true
 [ -n "$DB_PASSWORD" ] && export DB_PASSWORD  || true
@@ -60,7 +67,7 @@ if [ -z "$DB_HOST" ] || [ -z "$DB_DATABASE" ]; then
 fi
 
 # =============================================================
-# STEP 3: Log database config
+# STEP 3: Log database config (safe, no password)
 # =============================================================
 DB_URL_MASKED=$(echo "$DB_URL" | sed 's|://[^:]*:[^@]*@|://***:***@|')
 echo "=========================================="
