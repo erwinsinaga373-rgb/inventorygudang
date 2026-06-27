@@ -157,7 +157,14 @@ php artisan storage:link
 # =============================================================
 # STEP 8: Fix permissions for Laravel storage
 # =============================================================
-chmod -R 775 /app/storage /app/bootstrap/cache 2>/dev/null || true
+chmod -R 777 /app/storage /app/bootstrap/cache 2>/dev/null || true
+
+# =============================================================
+# STEP 8b: Test PHP and Laravel bootstrap
+# =============================================================
+echo "PHP version: $(php -v 2>&1 | head -1)"
+echo "Testing artisan..."
+php artisan about 2>&1 | head -10 || echo "artisan about FAILED"
 
 # =============================================================
 # STEP 9: Generate PHP-FPM config and start it
