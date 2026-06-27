@@ -20,6 +20,20 @@ if [ -n "$MYSQL_URL" ]; then
   export DB_CONNECTION=mysql
 fi
 
+echo "Waiting for database connection..."
+for i in $(seq 1 30); do
+  php -r "
+    try {
+      new PDO('mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_DATABASE', '$DB_USERNAME', '$DB_PASSWORD');
+      echo 'ok';
+    } catch (Exception \$e) {
+      echo 'no';
+    }
+  " 2>/dev/null | grep -q "ok" && break
+  echo "Attempt $i: DB not ready, waiting 2s..."
+  sleep 2
+done
+
 php artisan migrate --force
 php artisan storage:link
 
