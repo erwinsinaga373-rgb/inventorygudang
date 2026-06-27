@@ -155,9 +155,29 @@ php artisan migrate --force
 php artisan storage:link
 
 # =============================================================
-# STEP 8: Start PHP-FPM
+# STEP 8: Generate PHP-FPM config and start it
 # =============================================================
-php-fpm -D
+cat > /tmp/php-fpm.conf << 'PHPFPMCONF'
+[global]
+pid = /var/run/php-fpm.pid
+error_log = /var/log/php-fpm.log
+log_level = notice
+daemonize = yes
+
+[www]
+listen = 127.0.0.1:9000
+listen.allowed_clients = 127.0.0.1
+user = nobody
+group = nogroup
+pm = dynamic
+pm.max_children = 10
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 5
+php_admin_value[error_log] = /var/log/php-fpm-www.log
+PHPFPMCONF
+
+php-fpm -y /tmp/php-fpm.conf
 
 # =============================================================
 # STEP 9: Start Nginx on Railway-assigned port
