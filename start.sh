@@ -4,8 +4,6 @@ set -e
 # =============================================================
 # STEP 1: Parse database URL from Railway environment variables
 # =============================================================
-# Railway MySQL plugin auto-generates MYSQL_URL (internal) and
-# MYSQL_PUBLIC_URL (external). Laravel natively reads DATABASE_URL.
 DB_URL="${DATABASE_URL:-${MYSQL_URL:-$MYSQL_PUBLIC_URL}}"
 
 if [ -z "$DB_URL" ]; then
@@ -26,7 +24,7 @@ fi
 
 export DATABASE_URL="$DB_URL"
 
-# Parse URL components using sed
+# Parse URL components
 # Format: mysql://user:password@host:port/database
 DB_USERNAME=$(echo "$DB_URL" | sed -n 's|mysql://\([^:]*\):.*|\1|p')
 DB_PASSWORD=$(echo "$DB_URL" | sed -n 's|mysql://[^:]*:\([^@]*\)@.*|\1|p')
@@ -34,10 +32,8 @@ DB_HOST=$(echo "$DB_URL"     | sed -n 's|mysql://[^@]*@\([^:/]*\).*|\1|p')
 DB_PORT=$(echo "$DB_URL"     | sed -n 's|mysql://[^@]*@[^:/]*:\([^/]*\)/.*|\1|p')
 DB_DATABASE=$(echo "$DB_URL" | sed -n 's|.*/\([^?]*\)|\1|p')
 
-# If port wasn't parsed (no port in URL), default to 3306
 [ -z "$DB_PORT" ] && DB_PORT="3306"
 
-# Export so Laravel picks them up
 export DB_CONNECTION=mysql
 [ -n "$DB_USERNAME" ] && export DB_USERNAME  || true
 [ -n "$DB_PASSWORD" ] && export DB_PASSWORD  || true
@@ -64,20 +60,42 @@ if [ -z "$DB_HOST" ] || [ -z "$DB_DATABASE" ]; then
 fi
 
 # =============================================================
-# STEP 3: Log database config (safe, without password)
+# STEP 3: Log database config
 # =============================================================
+DB_URL_MASKED=$(echo "$DB_URL" | sed 's|://[^:]*:[^@]*@|://***:***@|')
 echo "=========================================="
-echo " Database configuration:"
-echo "   DB_HOST:      ${DB_HOST}"
-echo "   DB_PORT:      ${DB_PORT}"
-echo "   DB_DATABASE:  ${DB_DATABASE}"
-echo "   DB_USERNAME:  ${DB_USERNAME}"
+echo " Database URL:  ${DB_URL_MASKED}"
+echo " DB_HOST:       ${DB_HOST}"
+echo " DB_PORT:       ${DB_PORT}"
+echo " DB_DATABASE:   ${DB_DATABASE}"
+echo " DB_USERNAME:   ${DB_USERNAME}"
 echo "=========================================="
 
 # =============================================================
-# STEP 4: Wait for database to be ready
+# STEP 4: DNS resolution test
 # =============================================================
-echo "Waiting for database connection..."
+echo "Testing DNS resolution for '${DB_HOST}'..."
+HOST_IP=$(getent hosts "${DB_HOST}" 2>/dev/null | awk '{ print $1 }' | head -1)
+if [ -n "$HOST_IP" ]; then
+  echo "  -> Resolved to: ${HOST_IP}"
+else
+  echo "  -> WARNING: DNS resolution failed!"
+fi
+
+# =============================================================
+# STEP 5: TCP connectivity test
+# =============================================================
+echo "Testing TCP connection to ${DB_HOST}:${DB_PORT}..."
+if timeout 5 bash -c "echo > /dev/tcp/${DB_HOST}/${DB_PORT}" 2>/dev/null; then
+  echo "  -> Port is OPEN"
+else
+  echo "  -> Port is CLOSED or unreachable"
+fi
+
+# =============================================================
+# STEP 6: Wait for database to be ready
+# =============================================================
+echo "Waiting for database connection (up to 60 seconds)..."
 DB_READY=false
 for i in $(seq 1 30); do
   if php -r "
@@ -100,18 +118,24 @@ done
 if [ "$DB_READY" != "true" ]; then
   echo "=========================================="
   echo " ERROR: Database did not become ready"
-  echo " after 30 attempts."
+  echo " after 30 attempts (60 seconds)."
   echo ""
-  echo " Check:"
-  echo "   1. MySQL service is running in Railway"
-  echo "   2. App and MySQL are in the same project"
-  echo "   3. Host '${DB_HOST}' is reachable on port ${DB_PORT}"
+  echo " Last PDO error was:"
+  php -r "
+    try {
+      new PDO('mysql:host=${DB_HOST};port=${DB_PORT};dbname=${DB_DATABASE}',
+              '${DB_USERNAME}', '${DB_PASSWORD}');
+    } catch (Exception \$e) {
+      echo \$e->getMessage();
+    }
+  " 2>&1 || echo "(failed to get PDO error)"
+  echo ""
   echo "=========================================="
   exit 1
 fi
 
 # =============================================================
-# STEP 5: Clear Laravel cache and run migrations
+# STEP 7: Clear Laravel cache and run migrations
 # =============================================================
 php artisan config:clear
 php artisan cache:clear
@@ -119,12 +143,12 @@ php artisan migrate --force
 php artisan storage:link
 
 # =============================================================
-# STEP 6: Start PHP-FPM
+# STEP 8: Start PHP-FPM
 # =============================================================
 php-fpm -D
 
 # =============================================================
-# STEP 7: Start Nginx on Railway-assigned port
+# STEP 9: Start Nginx on Railway-assigned port
 # =============================================================
 sed "s/PORT_PLACEHOLDER/${PORT:-8080}/g" /app/nginx.conf > /tmp/nginx.conf
 nginx -c /tmp/nginx.conf -g 'daemon off;'
