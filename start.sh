@@ -284,7 +284,7 @@ NGINX_PID=$!
 sleep 2
 
 echo "Testing HTTP response..."
-HTTP_CODE=$(curl -s -o /tmp/healthcheck.html -w "%{http_code}" http://127.0.0.1:${NGINX_PORT}/ 2>/dev/null || echo "000")
+HTTP_CODE=$(curl -s -o /tmp/healthcheck.html -w "%{http_code}" http://127.0.0.1:${NGINX_PORT}/login 2>/dev/null || echo "000")
 echo "HTTP status: ${HTTP_CODE}"
 if [ "${HTTP_CODE}" = "200" ] || [ "${HTTP_CODE}" = "302" ] || [ "${HTTP_CODE}" = "301" ]; then
   echo "Application is responding!"
