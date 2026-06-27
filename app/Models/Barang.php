@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Controllers; // Pastikan namespace Anda tetap namespace App\Models; jika ini typo saat copy-paste
+
 namespace App\Models;
 
 use App\Models\User;
@@ -16,7 +18,20 @@ class Barang extends Model
     use HasFactory;
     use LogsActivity;
 
-    protected $fillable = ['kode_barang', 'nama_barang', 'deskripsi', 'gambar', 'stok_minimum', 'jenis_id', 'stok', 'satuan_id', 'user_id'];
+    // TAMBAHKAN 'stok_maksimum' ke dalam array $fillable di bawah ini
+    protected $fillable = [
+        'kode_barang', 
+        'nama_barang', 
+        'deskripsi', 
+        'gambar', 
+        'stok_minimum', 
+        'stok_maksimum', // <-- BERHASIL DITAMBAHKAN
+        'jenis_id', 
+        'stok', 
+        'satuan_id', 
+        'user_id'
+    ];
+    
     protected $guarded = [''];
     protected $ignoreChangedAttributes = ['updated_at'];
 

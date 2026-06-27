@@ -4,24 +4,26 @@
 @include('hak-akses.edit')
 
 @section('content')
-<!-- Custom Styles untuk Tema Sage Green Premium Ultra-Modern -->
 <style>
     :root {
-        --sage-dark: #2C382E;
-        --sage-main: #607964;
-        --sage-mid: #849E88;
-        --sage-light: #A9BFA3;
-        --sage-bg-soft: #F4F7F4;
+        --corp-dark: #064E3B;        /* Emerald 900 - Teks utama & judul */
+        --corp-navy: #022C22;        /* Emerald 950 - Topbar / Nav background */
+        --corp-muted: #34D399;       /* Emerald 400 - Teks sekunder / batasan halus */
+        --corp-bg-soft: #F0FDF4;     /* Emerald 50 - Background panel & baris hover */
+        --corp-border: #DCFCE7;      /* Emerald 100 - Batas border ringan */
+        --corp-green: #059669;       /* Emerald 600 - Aksentuasi utama */
+        
+        --corp-gradient-1: linear-gradient(135deg, #10B981 0%, #059669 100%);
     }
 
-    /* === SINKRONISASI NAVBAR ATAS STISLA (SAGE GREEN) === */
+    /* === SINKRONISASI NAVBAR ATAS STISLA === */
     body .navbar-bg {
-        background: linear-gradient(135deg, #4A5D4E 0%, #2C382E 100%) !important;
+        background: linear-gradient(135deg, #022C22 0%, #064E3B 100%) !important;
         height: 125px !important;
     }
     
     body .main-navbar .nav-link {
-        color: #f4f6f4 !important;
+        color: #E6F4EA !important;
     }
     
     body .main-navbar .nav-link:hover,
@@ -37,26 +39,27 @@
 
     /* Global Section Text & Buttons */
     .section-header h1 {
-        color: var(--sage-dark) !important;
+        color: var(--corp-dark) !important;
         font-weight: 800;
         letter-spacing: -0.75px;
     }
 
-    .btn-premium-sage {
-        background: linear-gradient(135deg, #738B73 0%, #4A5D4E 100%) !important;
+    .btn-premium-emerald {
+        background: var(--corp-gradient-1) !important;
         color: #ffffff !important;
         border: none !important;
         border-radius: 12px !important;
         padding: 10px 20px !important;
         font-weight: 600 !important;
-        box-shadow: 0 4px 15px rgba(74, 93, 78, 0.2) !important;
+        box-shadow: 0 4px 15px rgba(5, 150, 105, 0.2) !important;
         transition: all 0.3s ease !important;
     }
 
-    .btn-premium-sage:hover {
+    .btn-premium-emerald:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(74, 93, 78, 0.35) !important;
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.35) !important;
         opacity: 0.95;
+        color: #ffffff !important;
     }
 
     /* Premium Card Structure */
@@ -64,7 +67,7 @@
         border: none !important;
         border-radius: 24px !important;
         background: #ffffff;
-        box-shadow: 0 10px 30px rgba(96, 121, 100, 0.04) !important;
+        box-shadow: 0 10px 30px rgba(2, 44, 34, 0.03) !important;
         overflow: hidden;
     }
 
@@ -77,32 +80,32 @@
 
     .table-modern thead th {
         border: none !important;
-        color: var(--sage-dark) !important;
+        color: var(--corp-dark) !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
         font-size: 11px !important;
         letter-spacing: 0.8px !important;
-        background-color: var(--sage-bg-soft) !important;
+        background-color: var(--corp-bg-soft) !important;
         padding: 16px 14px !important;
     }
 
     .table-modern tbody td {
         padding: 14px !important;
         vertical-align: middle !important;
-        border-top: 1px solid #f1f5f1 !important;
-        border-bottom: 1px solid #f1f5f1 !important;
-        color: #4A534D;
+        border-top: 1px solid var(--corp-border) !important;
+        border-bottom: 1px solid var(--corp-border) !important;
+        color: #064E3B;
         background: #ffffff;
     }
 
     .table-modern tbody tr td:first-child {
-        border-left: 1px solid #f1f5f1 !important;
+        border-left: 1px solid var(--corp-border) !important;
         border-top-left-radius: 16px !important;
         border-bottom-left-radius: 16px !important;
     }
 
     .table-modern tbody tr td:last-child {
-        border-right: 1px solid #f1f5f1 !important;
+        border-right: 1px solid var(--corp-border) !important;
         border-top-right-radius: 16px !important;
         border-bottom-right-radius: 16px !important;
     }
@@ -112,8 +115,8 @@
     }
 
     .table-modern tbody tr:hover td {
-        background-color: var(--sage-bg-soft) !important;
-        border-color: var(--sage-light) !important;
+        background-color: var(--corp-bg-soft) !important;
+        border-color: #A7F3D0 !important;
     }
 
     /* Desain Tombol Opsi Mikro */
@@ -143,18 +146,31 @@
 
     /* Customisasi Tampilan Sampingan DataTables */
     .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-        background: linear-gradient(135deg, #738B73 0%, #4A5D4E 100%) !important;
+        background: var(--corp-gradient-1) !important;
         color: white !important;
         border: none !important;
         border-radius: 8px;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid var(--corp-border) !important;
+        border-radius: 8px !important;
+        padding: 6px 12px !important;
+        background-color: #fff !important;
+    }
+    
+    .dataTables_wrapper .dataTables_filter input:focus {
+        outline: none !important;
+        border-color: var(--corp-green) !important;
+        box-shadow: 0 0 0 0.2rem rgba(5, 150, 105, 0.1) !important;
     }
 </style>
 
 <div class="section-header mb-4">
     <h1>Hak Akses</h1>
     <div class="ml-auto">
-        <a href="javascript:void(0)" class="btn btn-premium-sage d-flex align-items-center" id="button_tambah_role">
-            <i class="fa fa-plus mr-2"></i> Tambah Role
+        <a href="javascript:void(0)" class="btn btn-premium-emerald d-flex align-items-center" id="button_tambah_role">
+            <i class="fa fa-user-shield mr-2"></i> Tambah Role
         </a>
     </div>
 </div>
@@ -174,6 +190,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{-- Data dimuat dinamis melalui AJAX --}}
                         </tbody>
                     </table>
                 </div>
@@ -182,16 +199,23 @@
     </div>
 </div>
 
-<!-- Datatables Jquery & Ajax Logic -->
 <script>
     $(document).ready(function() {
-        // Inisialisasi DataTables awal dengan pengaturan bahasa pendukung
-        $('#table_id').DataTable({
+        // Inisialisasi DataTables awal dengan konfigurasi pencarian tema inventaris
+        let table = $('#table_id').DataTable({
             paging: true,
+            processing: true,
             language: {
                 search: "_INPUT_",
-                searchPlaceholder: "Cari role...",
-                lengthMenu: "Tampilkan _MENU_ data"
+                searchPlaceholder: "Cari data hak akses...",
+                lengthMenu: "Tampilkan _MENU_ data",
+                zeroRecords: "Tidak ada data role yang ditemukan",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+                paginate: {
+                    next: '<i class="fas fa-chevron-right"></i>',
+                    previous: '<i class="fas fa-chevron-left"></i>'
+                }
             }
         });
 
@@ -200,8 +224,8 @@
             return `
                 <tr class="role-row" id="index_${value.id}">
                     <td><span class="font-weight-bold text-muted" style="font-size: 13px;">${counter}</span></td>
-                    <td style="font-size: 14px; font-weight: 600; color: var(--sage-dark);">${value.role}</td>
-                    <td style="font-size: 14px; color: #4A534D;">${value.deskripsi ? value.deskripsi : '-'}</td>
+                    <td style="font-size: 14px; font-weight: 600; color: var(--corp-dark);"><i class="fas fa-id-badge mr-2 text-muted"></i>${value.role}</td>
+                    <td style="font-size: 14px; color: #064E3B;">${value.deskripsi ? value.deskripsi : '<em class="text-muted">- Tidak ada deskripsi -</em>'}</td>
                     <td class="text-center">
                         <a href="javascript:void(0)" data-id="${value.id}" class="btn btn-action-premium btn-action-edit button_edit_role" title="Ubah"><i class="far fa-edit"></i></a>
                         <a href="javascript:void(0)" data-id="${value.id}" class="btn btn-action-premium btn-action-delete button_hapus_role" title="Hapus"><i class="fas fa-trash"></i></a>
@@ -210,7 +234,7 @@
             `;
         }
 
-        // Fungsi fetch data utama agar tidak menulis perulangan berkali-kali
+        // Fungsi fetch data utama agar tersinkronisasi sempurna dengan reload DataTables
         function loadDataRole() {
             $.ajax({
                 url: "/hak-akses/get-data",
@@ -218,11 +242,12 @@
                 dataType: 'JSON',
                 success: function(response) {
                     let counter = 1;
-                    $('#table_id').DataTable().clear();
+                    table.clear();
                     $.each(response.data, function(key, value) {
                         let rowHtml = generateRowHtml(counter++, value);
-                        $('#table_id').DataTable().row.add($(rowHtml)).draw(false);
+                        table.row.add($(rowHtml));
                     });
+                    table.draw(false);
                 }
             });
         }
@@ -232,9 +257,13 @@
 
         // Trigger Modal Tambah Data
         $('body').on('click', '#button_tambah_role', function() {
-            // Reset sisa peringatan eror sebelumnya
+            // Reset sisa peringatan eror sebelumnya (Form Tambah)
             $('#alert-role').removeClass('d-block').addClass('d-none').html('');
             $('#alert-deskripsi').removeClass('d-block').addClass('d-none').html('');
+            
+            // Mengosongkan form jika ada sisa inputan sebelumnya
+            $('#role').val('');
+            $('#deskripsi').val('');
             
             $('#modal_tambah_role').modal('show');
         });
@@ -262,17 +291,15 @@
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
-                        title: `${response.message}`,
+                        title: 'Berhasil!',
+                        text: `${response.message}`,
                         showConfirmButton: false,
-                        timer: 2000
+                        timer: 2000,
+                        background: '#ffffff',
+                        confirmButtonColor: '#059669'
                     });
 
-                    // Kosongkan form input kembali
-                    $('#role').val('');
-                    $('#deskripsi').val('');
                     $('#modal_tambah_role').modal('hide');
-                    
-                    // Refresh data tabel secara real-time
                     loadDataRole();
                 },
                 error: function(error) {
@@ -290,8 +317,9 @@
         $('body').on('click', '.button_edit_role', function() {
             let role_id = $(this).data('id');
 
-            $('#alert-role').removeClass('d-block').addClass('d-none').html('');
-            $('#alert-deskripsi').removeClass('d-block').addClass('d-none').html('');
+            // Reset sisa peringatan eror sebelumnya (Form Edit)
+            $('#alert-edit-role').removeClass('d-block').addClass('d-none').html('');
+            $('#alert-edit-deskripsi').removeClass('d-block').addClass('d-none').html('');
 
             $.ajax({
                 url: `/hak-akses/${role_id}/edit`,
@@ -331,24 +359,23 @@
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
-                        title: `${response.message}`,
+                        title: 'Diperbarui!',
+                        text: `${response.message}`,
                         showConfirmButton: false,
-                        timer: 2000
+                        timer: 2000,
+                        background: '#ffffff',
+                        confirmButtonColor: '#059669'
                     });
 
-                    // Perbarui teks baris yang diedit secara dinamis tanpa merusak susunan DOM
-                    let row = $(`#index_${response.data.id}`);
-                    row.find('td').eq(1).text(response.data.role);
-                    row.find('td').eq(2).text(response.data.deskripsi ? response.data.deskripsi : '-');
-
                     $('#modal_edit_role').modal('hide');
+                    loadDataRole(); 
                 },
                 error: function(error) {
                     if (error.responseJSON && error.responseJSON.role) {
-                        $('#alert-role').removeClass('d-none').addClass('d-block').html(error.responseJSON.role[0]);
+                        $('#alert-edit-role').removeClass('d-none').addClass('d-block').html(error.responseJSON.role[0]);
                     }
                     if (error.responseJSON && error.responseJSON.deskripsi) {
-                        $('#alert-deskripsi').removeClass('d-none').addClass('d-block').html(error.responseJSON.deskripsi[0]);
+                        $('#alert-edit-deskripsi').removeClass('d-none').addClass('d-block').html(error.responseJSON.deskripsi[0]);
                     }
                 }
             });
@@ -361,13 +388,14 @@
 
             Swal.fire({
                 title: 'Apakah Anda Yakin?',
-                text: "Data hak akses ini akan dihapus secara permanen!",
+                text: "Hak akses pengguna ini akan dihapus secara permanen dari sistem!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#4A5D4E',
+                confirmButtonColor: '#059669',
                 cancelButtonColor: '#dc3545',
-                confirmButtonText: 'Ya, Hapus Data',
-                cancelButtonText: 'Batal'
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal',
+                background: '#ffffff'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -378,12 +406,14 @@
                         success: function(response) {
                             Swal.fire({
                                 icon: 'success',
-                                title: `${response.message}`,
+                                title: 'Dihapus!',
+                                text: `${response.message}`,
                                 showConfirmButton: false,
-                                timer: 2000
+                                timer: 2000,
+                                background: '#ffffff',
+                                confirmButtonColor: '#059669'
                             });
                             
-                            // Ambil ulang data agar kalkulasi penomoran DataTables tetap rapi
                             loadDataRole();
                         }
                     });

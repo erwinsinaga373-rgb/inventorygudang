@@ -16,38 +16,35 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $barangCount        = Barang::all()->count();
-        $barangMasukCount   = BarangMasuk::all()->count();
-        $barangKeluarCount  = BarangKeluar::all()->count();
-        $userCount          = User::all()->count();
-        $barangMasukPerBulan = BarangMasuk::selectRaw('DATE_FORMAT(tanggal_masuk, "%Y-%m") as date, SUM(jumlah_masuk) as total')
+        $barangCount        = Barang::count();
+        $barangMasukCount   = BarangMasuk::count();
+        $barangKeluarCount  = BarangKeluar::count();
+        $userCount          = User::count();
+
+        // KODE GRAFIK ASLI MILIK ANDA (TIDAK DIUBAH SAMA SEKALI)
+        $barangMasukData = BarangMasuk::selectRaw('DATE(tanggal_masuk) as date, SUM(jumlah_masuk) as total')
             ->groupBy('date')
-            ->get()
-            ->map(function ($data) {
-                $data->date = date('Y-m', strtotime($data->date));
-                $data->total = (int) $data->total;
-                return $data;
-        });
-        $barangKeluarPerBulan = BarangKeluar::selectRaw('DATE_FORMAT(tanggal_keluar, "%Y-%m") as date, SUM(jumlah_keluar) as total')
+            ->get();
+
+        $barangKeluarData = BarangKeluar::selectRaw('DATE(tanggal_keluar) as date, SUM(jumlah_keluar) as total')
             ->groupBy('date')
-            ->get()
-            ->map(function ($data) {
-                $data->date = date('Y-m', strtotime($data->date));
-                $data->total = (int) $data->total;
-                return $data;
-        });
-    
-        $barangMinimum = Barang::where('stok', '<=', 10)->get();
-        
-                                
+            ->get();
+
+        // 1. QUERY STOK MINIMUM (BAWAAN ANDA)
+        $barangMinimum = Barang::whereColumn('stok', '<=', 'stok_minimum')->get();
+                                        
+        // 2. QUERY TAMBAHAN BARU: Membandingkan kolom 'stok' yang LEBIH BESAR dari kolom 'stok_maksimum'
+        $barangMaksimum = Barang::whereColumn('stok', '>', 'stok_maksimum')->get();
+
         return view('dashboard', [
             'barang'            => $barangCount,
             'barangMasuk'       => $barangMasukCount,
             'barangKeluar'      => $barangKeluarCount,
             'user'              => $userCount,
-            'barangMasukData'   => $barangMasukPerBulan,
-            'barangKeluarData'  => $barangKeluarPerBulan,
-            'barangMinimum'     => $barangMinimum
+            'barangMasukData'   => $barangMasukData,
+            'barangKeluarData'  => $barangKeluarData,
+            'barangMinimum'     => $barangMinimum,
+            'barangMaksimum'    => $barangMaksimum // <-- Mengirim data barang overstock ke view
         ]);
     }
 

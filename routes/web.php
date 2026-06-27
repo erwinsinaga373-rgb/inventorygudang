@@ -32,10 +32,10 @@ use App\Models\BarangMasuk;
 |
 */
 
-
 Route::middleware('auth')->group(function () {
 
-    Route::group(['middleware' => 'checkRole:superadmin'], function(){
+    // GROUP MIDDLEWARE: SUPERADMIN ONLY
+    Route::group(['middleware' => 'checkRole:owner'], function(){
         Route::get('/data-pengguna/get-data', [ManajemenUserController::class, 'getDataPengguna']);
         Route::get('/api/role/', [ManajemenUserController::class, 'getRole']);
         Route::resource('/data-pengguna', ManajemenUserController::class);
@@ -44,12 +44,13 @@ Route::middleware('auth')->group(function () {
         Route::resource('/hak-akses', HakAksesController::class);
     });
 
-    Route::group(['middleware' => 'checkRole:superadmin,kepala gudang'], function(){
+    // GROUP MIDDLEWARE: SUPERADMIN & KEPALA GUDANG
+    Route::group(['middleware' => 'checkRole:owner,kepala gudang'], function(){
         Route::resource('/aktivitas-user', ActivityLogController::class);
-        
     });
 
-    Route::group(['middleware' => 'checkRole:kepala gudang,superadmin,admin gudang'], function(){
+    // GROUP MIDDLEWARE: KEPALA GUDANG, SUPERADMIN, ADMIN GUDANG (SEMUA ROLE)
+    Route::group(['middleware' => 'checkRole:kepala gudang,owner,admin'], function(){
         Route::resource('/dashboard', DashboardController::class);
         Route::get('/', [DashboardController::class, 'index']);
         
@@ -69,11 +70,14 @@ Route::middleware('auth')->group(function () {
         Route::resource('/laporan-barang-keluar', LaporanBarangKeluarController::class);
 
         Route::get('/ubah-password', [UbahPasswordController::class,'index']);
-        Route::POST('/ubah-password', [UbahPasswordController::class, 'changePassword']);
+        Route::post('/ubah-password', [UbahPasswordController::class, 'changePassword']);
     });
 
-
-    Route::group(['middleware' => 'checkRole:superadmin,admin gudang'], function(){
+    // GROUP MIDDLEWARE: SUPERADMIN & ADMIN GUDANG
+    Route::group(['middleware' => 'checkRole:owner,admin'], function(){
+        
+        // PENTING: Jalur pencarian diurutkan TEPAT di atas resource /barang agar tidak bertabrakan!
+        Route::get('/barang/search', [BarangController::class, 'search'])->name('barang.search');
         Route::get('/barang/get-data', [BarangController::class, 'getDataBarang']);
         Route::resource('/barang', BarangController::class);
     
@@ -99,7 +103,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/api/satuan/', [BarangKeluarController::class, 'getSatuan']);
         Route::resource('/barang-keluar', BarangKeluarController::class);
     });
-
 
 });
 

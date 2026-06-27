@@ -60,6 +60,12 @@
                 <input type="number" class="form-control" name="stok_minimum" id="edit_stok_minimum">
                 <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-stok_minimum"></div>
               </div>
+
+              <div class="form-group">
+                <label>Stok Maksimum</label>
+                <input type="number" class="form-control" name="stok_maksimum" id="edit_stok_maksimum">
+                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-stok_maksimum"></div>
+              </div>
               
               <div class="form-group">
                 <label>Deskripsi</label>

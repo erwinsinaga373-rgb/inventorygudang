@@ -1,28 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Custom Styles untuk Tema Sage Green Premium Ultra-Modern -->
 <style>
     :root {
-        --sage-dark: #2C382E;
-        --sage-main: #607964;
-        --sage-mid: #849E88;
-        --sage-light: #A9BFA3;
-        --sage-bg-soft: #F4F7F4;
-        --sage-gradient-1: linear-gradient(135deg, #738B73 0%, #4A5D4E 100%);
-        --sage-gradient-2: linear-gradient(135deg, #A7BBA2 0%, #7E9579 100%);
-        --sage-gradient-3: linear-gradient(135deg, #E6DDD6 0%, #C4A48A 100%);
-        --sage-gradient-4: linear-gradient(135deg, #BACBB9 0%, #8FA48F 100%);
+        --corp-dark: #064E3B;        /* Emerald 900 */
+        --corp-navy: #022C22;        /* Emerald 950 */
+        --corp-muted: #34D399;       /* Emerald 400 */
+        --corp-text-muted: #475569;  /* Slate 600 */
+        --corp-bg-soft: #F0FDF4;     /* Emerald 50 */
+        --corp-border: #DCFCE7;      /* Emerald 100 */
+        --corp-green: #059669;       /* Emerald 600 */
+        
+        /* Gradasi */
+        --corp-gradient-1: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        --gradient-in: linear-gradient(135deg, #10B981 0%, #047857 100%);
+        --gradient-out: linear-gradient(135deg, #F59E0B 0%, #B45309 100%);
+        --gradient-user: linear-gradient(135deg, #6B7280 0%, #374151 100%);
     }
 
-    /* === SINKRONISASI NAVBAR ATAS STISLA (SAGE GREEN) === */
+    /* === SINKRONISASI NAVBAR ATAS STISLA === */
     body .navbar-bg {
-        background: linear-gradient(135deg, #4A5D4E 0%, #2C382E 100%) !important;
+        background: linear-gradient(135deg, #022C22 0%, #064E3B 100%) !important;
         height: 125px !important;
     }
     
     body .main-navbar .nav-link {
-        color: #f4f6f4 !important;
+        color: #E6F4EA !important;
     }
     
     body .main-navbar .nav-link:hover,
@@ -37,48 +40,46 @@
     }
 
     body .navbar .form-inline .form-control {
-        background-color: rgba(255, 255, 255, 0.12) !important;
+        background-color: rgba(255, 255, 255, 0.15) !important;
         border-color: transparent !important;
         color: #ffffff !important;
         border-radius: 30px;
     }
 
     body .navbar .form-inline .form-control::placeholder {
-        color: rgba(255, 255, 255, 0.5) !important;
+        color: rgba(240, 253, 244, 0.6) !important;
     }
 
     body .navbar .form-inline .btn {
-        background-color: rgba(255, 255, 255, 0.18) !important;
+        background-color: rgba(255, 255, 255, 0.2) !important;
         color: #ffffff !important;
         border-radius: 30px;
     }
-    /* ==================================================== */
     
     /* Global Section Text */
     .section-header h1 {
-        color: var(--sage-dark) !important;
+        color: var(--corp-dark) !important;
         font-weight: 800;
         letter-spacing: -0.75px;
     }
 
-    /* Premium Glass-Card Style */
+    /* Premium Card Structure */
     .card-premium {
         border: none !important;
         border-radius: 24px !important;
         background: #ffffff;
-        box-shadow: 0 10px 30px rgba(96, 121, 100, 0.04) !important;
+        box-shadow: 0 10px 30px rgba(2, 44, 34, 0.03) !important;
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         overflow: hidden;
     }
 
     .card-premium:hover {
         transform: translateY(-4px);
-        box-shadow: 0 20px 40px rgba(96, 121, 100, 0.12) !important;
+        box-shadow: 0 20px 40px rgba(2, 44, 34, 0.07) !important;
     }
 
     /* Metric Layout Styling */
     .metric-label {
-        color: #8A9A8E;
         font-size: 11px;
         font-weight: 700;
         letter-spacing: 1.2px;
@@ -86,22 +87,22 @@
 
     .metric-value {
         font-weight: 800; 
-        font-size: 2rem;
+        font-size: 2.2rem;
         letter-spacing: -0.5px;
         line-height: 1.1;
     }
 
-    /* Dynamic Icon Wrappers with Gradients */
+    /* Dynamic Icon Wrappers */
     .icon-wrapper-dynamic {
-        width: 54px;
-        height: 54px;
+        width: 50px;
+        height: 50px;
         border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        font-size: 18px;
         color: #ffffff !important;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 8px 20px rgba(2, 44, 34, 0.1);
         transition: all 0.4s ease;
     }
 
@@ -110,9 +111,9 @@
     }
 
     /* Soft Pill Badges */
-    .badge-sage-alert {
-        background-color: rgba(214, 158, 46, 0.12) !important;
-        color: #A07216 !important;
+    .badge-corporate-alert {
+        background-color: rgba(239, 68, 68, 0.1) !important;
+        color: #DC2626 !important;
         font-weight: 700;
         border-radius: 30px;
         padding: 5px 14px;
@@ -121,49 +122,56 @@
 
     /* Luxury Table Interface */
     .table-modern {
-        border-collapse: separate;
-        border-spacing: 0 6px;
+        border-collapse: separate !important;
+        border-spacing: 0 8px !important;
+        width: 100% !important;
     }
 
     .table-modern thead th {
         border: none !important;
-        color: var(--sage-dark);
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 11px;
-        letter-spacing: 0.8px;
-        background-color: var(--sage-bg-soft);
-        padding: 14px;
+        color: var(--corp-dark) !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        font-size: 11px !important;
+        letter-spacing: 0.8px !important;
+        background-color: var(--corp-bg-soft) !important;
+        padding: 16px 14px !important;
     }
 
     .table-modern tbody td {
         padding: 14px !important;
         vertical-align: middle !important;
-        border-top: 1px solid #f1f5f1 !important;
-        border-bottom: 1px solid #f1f5f1 !important;
-        color: #4A534D;
+        border-top: 1px solid var(--corp-border) !important;
+        border-bottom: 1px solid var(--corp-border) !important;
+        color: #064E3B;
+        background: #ffffff;
     }
 
     .table-modern tbody tr td:first-child {
-        border-left: 1px solid #f1f5f1 !important;
-        border-top-left-radius: 12px;
-        border-bottom-left-radius: 12px;
+        border-left: 1px solid var(--corp-border) !important;
+        border-top-left-radius: 16px !important;
+        border-bottom-left-radius: 16px !important;
     }
 
     .table-modern tbody tr td:last-child {
-        border-right: 1px solid #f1f5f1 !important;
-        border-top-right-radius: 12px;
-        border-bottom-right-radius: 12px;
+        border-right: 1px solid var(--corp-border) !important;
+        border-top-right-radius: 16px !important;
+        border-bottom-right-radius: 16px !important;
+    }
+
+    .table-modern tbody tr {
+        transition: all 0.3s ease;
     }
 
     .table-modern tbody tr:hover td {
-        background-color: var(--sage-bg-soft) !important;
+        background-color: var(--corp-bg-soft) !important;
+        border-color: #A7F3D0 !important;
     }
 
     .card-title-premium {
         font-size: 18px;
         font-weight: 800;
-        color: var(--sage-dark);
+        color: var(--corp-dark);
         letter-spacing: -0.3px;
     }
 </style>
@@ -172,93 +180,82 @@
     <h1>Dashboard Utama</h1>
 </div>
 
-<!-- BARIS UTAMA LAYOUT BARU ASIMETRIS -->
-<div class="row">
-    
-    <!-- KOLOM KIRI: GRAFIK DATA (LEBIH LEBAR DAN DOMINAN) -->
-    <div class="col-xl-8 col-lg-7 mb-4">
-        <div class="card card-premium h-100">
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card card-premium">
             <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
                 <div>
-                    <h5 class="card-title-premium mb-0">Grafik Arus Barang</h5>
-                    <p class="text-muted small mb-0">Visualisasi realtime komparasi logistik bulanan</p>
+                    <h5 class="card-title-premium mb-0">Tren Arus Logistik</h5>
+                    <p class="text-muted small mb-0">Visualisasi fluktuasi bulanan distribusi barang masuk dan keluar secara realtime</p>
                 </div>
             </div>
-            <div class="card-body px-4 pb-4 pt-2">
+            <div class="card-body px-4 pb-3 pt-2">
                 <div style="position: relative; height: 340px;">
                     <canvas id="summaryChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- KOLOM KANAN: RINGKASAN DATA STATISTIK KELOMPOK -->
-    <div class="col-xl-4 col-lg-5 mb-4">
-        <div class="row h-100">
-            <!-- Semua Barang -->
-            <div class="col-md-6 col-lg-12 mb-4">
-                <div class="card card-premium p-3 h-100 d-flex justify-content-center">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <span class="metric-label text-uppercase d-block mb-1">Semua Barang</span>
-                            <h2 class="metric-value mb-0" style="color: var(--sage-dark)">{{ $barang }}</h2>
-                        </div>
-                        <div class="icon-wrapper-dynamic" style="background: var(--sage-gradient-1);">
-                            <i class="fas fa-cubes"></i>
-                        </div>
-                    </div>
+<div class="row mb-4">
+    <div class="col-xl-3 col-sm-6 mb-4 mb-xl-0">
+        <div class="card card-premium p-4 h-100" style="background: linear-gradient(to bottom right, #E6F4EA, #ffffff);">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="metric-label text-uppercase d-block mb-1" style="color: #059669;">Semua Barang</span>
+                    <h2 class="metric-value mb-0" style="color: #064E3B;">{{ $barang }}</h2>
+                </div>
+                <div class="icon-wrapper-dynamic" style="background: var(--corp-gradient-1);">
+                    <i class="fas fa-cubes"></i>
                 </div>
             </div>
-            
-            <!-- Barang Masuk -->
-            <div class="col-md-6 col-lg-12 mb-4">
-                <div class="card card-premium p-3 h-100 d-flex justify-content-center">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <span class="metric-label text-uppercase d-block mb-1">Barang Masuk</span>
-                            <h2 class="metric-value mb-0" style="color: var(--sage-main);">{{ $barangMasuk }}</h2>
-                        </div>
-                        <div class="icon-wrapper-dynamic" style="background: var(--sage-gradient-2);">
-                            <i class="fas fa-file-import"></i>
-                        </div>
-                    </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-sm-6 mb-4 mb-xl-0">
+        <div class="card card-premium p-4 h-100" style="background: linear-gradient(to bottom right, #ECFDF5, #ffffff);">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="metric-label text-uppercase d-block mb-1" style="color: #10B981;">Barang Masuk</span>
+                    <h2 class="metric-value mb-0" style="color: #047857;">{{ $barangMasuk }}</h2>
+                </div>
+                <div class="icon-wrapper-dynamic" style="background: var(--gradient-in);">
+                    <i class="fas fa-file-import"></i>
                 </div>
             </div>
-            
-            <!-- Barang Keluar -->
-            <div class="col-md-6 col-lg-12 mb-4">
-                <div class="card card-premium p-3 h-100 d-flex justify-content-center">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <span class="metric-label text-uppercase d-block mb-1">Barang Keluar</span>
-                            <h2 class="metric-value mb-0" style="color: #BA845D;">{{ $barangKeluar }}</h2>
-                        </div>
-                        <div class="icon-wrapper-dynamic" style="background: var(--sage-gradient-3);">
-                            <i class="fas fa-file-export"></i>
-                        </div>
-                    </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-sm-6 mb-4 mb-sm-0">
+        <div class="card card-premium p-4 h-100" style="background: linear-gradient(to bottom right, #FFFBEB, #ffffff);">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="metric-label text-uppercase d-block mb-1" style="color: #D97706;">Barang Keluar</span>
+                    <h2 class="metric-value mb-0" style="color: #78350F;">{{ $barangKeluar }}</h2>
+                </div>
+                <div class="icon-wrapper-dynamic" style="background: var(--gradient-out);">
+                    <i class="fas fa-file-export"></i>
                 </div>
             </div>
-            
-            <!-- Pengguna -->
-            <div class="col-md-6 col-lg-12 mb-4">
-                <div class="card card-premium p-3 h-100 d-flex justify-content-center">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <span class="metric-label text-uppercase d-block mb-1">Pengguna</span>
-                            <h2 class="metric-value mb-0" style="color: var(--sage-mid);">{{ $user }}</h2>
-                        </div>
-                        <div class="icon-wrapper-dynamic" style="background: var(--sage-gradient-4);">
-                            <i class="far fa-user"></i>
-                        </div>
-                    </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-sm-6">
+        <div class="card card-premium p-4 h-100" style="background: linear-gradient(to bottom right, #F8FAFC, #ffffff);">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="metric-label text-uppercase d-block mb-1" style="color: #64748B;">Pengguna</span>
+                    <h2 class="metric-value mb-0" style="color: #0F172A;">{{ $user }}</h2>
+                </div>
+                <div class="icon-wrapper-dynamic" style="background: var(--gradient-user);">
+                    <i class="far fa-user"></i>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- BARIS KEDUA LAYOUT: TABEL MONITORING UTUH -->
 <div class="row">
     <div class="col-12 mb-4">
         <div class="card card-premium">
@@ -272,7 +269,7 @@
                         <thead>
                             <tr>
                                 <th scope="col" width="8%">No</th>
-                                <th scope="col" width="20%">Kode Produk</th>
+                                <th scope="col" width="25%">Kode Produk</th>
                                 <th scope="col">Nama Barang/Inventaris</th>
                                 <th scope="col" width="15%" class="text-center">Sisa Stok</th>
                             </tr>
@@ -281,17 +278,61 @@
                             @forelse ($barangMinimum as $barang)
                                 <tr>
                                     <td><span class="font-weight-bold text-muted" style="font-size: 13px;">{{ $loop->iteration }}</span></td>
-                                    <td class="font-weight-bold" style="color: var(--sage-main); font-size: 13px;">{{ $barang->kode_barang }}</td>
-                                    <td style="font-size: 14px; font-weight: 600; color: var(--sage-dark);">{{ $barang->nama_barang }}</td>
+                                    <td class="font-weight-bold" style="color: #059669; font-size: 13px;">{{ $barang->kode_barang }}</td>
+                                    <td style="font-size: 14px; font-weight: 600; color: var(--corp-dark);">{{ $barang->nama_barang }}</td>
                                     <td class="text-center">
-                                        <span class="badge badge-sage-alert"><i class="fas fa-exclamation-triangle mr-1"></i> {{ $barang->stok }}</span>
+                                        <span class="badge badge-corporate-alert"><i class="fas fa-exclamation-triangle mr-1"></i> {{ $barang->stok }}</span>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="4" class="text-center text-muted py-5">
-                                        <i class="fas fa-check-circle mb-3 d-block" style="font-size: 40px; color: var(--sage-light);"></i>
-                                        <span style="font-size: 15px; font-weight: 500; color: var(--sage-main)">Kondisi Gudang Prima! Seluruh stok barang aman.</span>
+                                        <i class="fas fa-check-circle mb-3 d-block" style="font-size: 40px; color: #10B981;"></i>
+                                        <span style="font-size: 15px; font-weight: 500; color: #047857;">Kondisi Gudang Prima! Seluruh stok barang aman.</span>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mb-4">
+        <div class="card card-premium">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-1">
+                <h5 class="card-title-premium mb-0 text-danger">Stok Melebihi Batas Maksimum</h5>
+                <p class="text-muted small mb-0">Daftar inventaris yang melebihi kapasitas batas maksimum penyimpanan gudang (Overstock)</p>
+            </div>
+            <div class="card-body px-4 pb-4 pt-2">
+                <div class="table-responsive">
+                    <table class="table table-modern mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="8%">No</th>
+                                <th scope="col" width="25%">Kode Produk</th>
+                                <th scope="col">Nama Barang/Inventaris</th>
+                                <th scope="col" width="15%" class="text-center">Kelebihan Stok</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($barangMaksimum as $barang)
+                                <tr>
+                                    <td><span class="font-weight-bold text-muted" style="font-size: 13px;">{{ $loop->iteration }}</span></td>
+                                    <td class="font-weight-bold" style="color: #059669; font-size: 13px;">{{ $barang->kode_barang }}</td>
+                                    <td style="font-size: 14px; font-weight: 600; color: var(--corp-dark);">{{ $barang->nama_barang }}</td>
+                                    <td class="text-center">
+                                        <span class="badge badge-corporate-alert" style="background-color: rgba(239, 68, 68, 0.15) !important;">
+                                            <i class="fas fa-boxes mr-1"></i> Over {{ $barang->stok - $barang->stok_maksimum }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-5">
+                                        <i class="fas fa-check-circle mb-3 d-block" style="font-size: 40px; color: #10B981;"></i>
+                                        <span style="font-size: 15px; font-weight: 500; color: #047857;">Kapasitas Bagus! Tidak ada barang yang mengalami overstock.</span>
                                     </td>
                                 </tr>
                             @endforelse
@@ -311,15 +352,15 @@
         var ctx = document.getElementById('summaryChart').getContext('2d');
         
         var gradientMasuk = ctx.createLinearGradient(0, 0, 0, 320);
-        gradientMasuk.addColorStop(0, '#607964');
-        gradientMasuk.addColorStop(1, 'rgba(169, 191, 163, 0.2)');
+        gradientMasuk.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+        gradientMasuk.addColorStop(1, 'rgba(16, 185, 129, 0.00)');
 
         var gradientKeluar = ctx.createLinearGradient(0, 0, 0, 320);
-        gradientKeluar.addColorStop(0, '#BACBB9');
-        gradientKeluar.addColorStop(1, 'rgba(232, 239, 233, 0.1)');
+        gradientKeluar.addColorStop(0, 'rgba(245, 158, 11, 0.20)');
+        gradientKeluar.addColorStop(1, 'rgba(245, 158, 11, 0.00)');
 
         var chart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: [
                     @foreach($barangMasukData as $data)
@@ -335,10 +376,15 @@
                             @endforeach
                         ],
                         backgroundColor: gradientMasuk,
-                        borderRadius: 8,
-                        borderSkipped: false,
-                        barPercentage: 0.4,
-                        categoryPercentage: 0.6
+                        borderColor: '#10B981',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#10B981',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        tension: 0.4,
+                        fill: true
                     },
                     {
                         label: 'Barang Keluar',
@@ -348,43 +394,58 @@
                             @endforeach
                         ],
                         backgroundColor: gradientKeluar,
-                        borderRadius: 8,
-                        borderSkipped: false,
-                        barPercentage: 0.4,
-                        categoryPercentage: 0.6
+                        borderColor: '#F59E0B',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#F59E0B',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        tension: 0.4,
+                        fill: true
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { family: "'Inter', sans-serif", size: 11, weight: '500' }, color: '#64748B' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(220, 252, 231, 0.25)' },
+                        border: { display: false },
+                        ticks: { font: { family: "'Inter', sans-serif", size: 11 }, color: '#64748B' }
+                    }
+                },
                 plugins: {
                     legend: {
                         position: 'top',
                         align: 'end',
                         labels: {
-                            boxWidth: 6,
-                            boxHeight: 6,
+                            boxWidth: 8,
+                            boxHeight: 8,
                             usePointStyle: true,
                             pointStyle: 'circle',
+                            padding: 20,
                             font: { size: 12, weight: '600', family: "'Inter', sans-serif" }
                         }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#8A9A8E', font: { size: 11, weight: '600' } }
                     },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#EDF2EE', drawBorder: false },
-                        ticks: {
-                            precision: 0,
-                            stepSize: 1,
-                            color: '#8A9A8E',
-                            font: { size: 11 }
-                        }
+                    tooltip: {
+                        padding: 14,
+                        backgroundColor: '#022C22',
+                        titleFont: { family: "'Inter', sans-serif", weight: '700', size: 13 },
+                        bodyFont: { family: "'Inter', sans-serif", size: 12 },
+                        cornerRadius: 16,
+                        usePointStyle: true,
+                        boxWidth: 6,
+                        boxHeight: 6
                     }
                 }
             }

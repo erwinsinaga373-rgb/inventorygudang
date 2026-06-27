@@ -4,24 +4,26 @@
 @include('supplier.edit')
 
 @section('content')
-<!-- Custom Styles untuk Tema Sage Green Premium Ultra-Modern -->
 <style>
     :root {
-        --sage-dark: #2C382E;
-        --sage-main: #607964;
-        --sage-mid: #849E88;
-        --sage-light: #A9BFA3;
-        --sage-bg-soft: #F4F7F4;
+        --corp-dark: #064E3B;        /* Emerald 900 - Untuk teks utama/judul */
+        --corp-navy: #022C22;        /* Emerald 950 - Untuk Topbar / Sisi aktif */
+        --corp-muted: #34D399;       /* Emerald 400 - Untuk teks sekunder */
+        --corp-bg-soft: #F0FDF4;     /* Emerald 50 - Background utama bersih */
+        --corp-border: #DCFCE7;      /* Emerald 100 - Garis pembatas ringan */
+        --corp-green: #059669;       /* Emerald 600 - Warna aksen utama */
+        
+        --corp-gradient-1: linear-gradient(135deg, #10B981 0%, #059669 100%); /* Emerald Pro */
     }
 
-    /* === SINKRONISASI NAVBAR ATAS STISLA (SAGE GREEN) === */
+    /* === SINKRONISASI NAVBAR ATAS STISLA (MODERN CORPORATE EMERALD) === */
     body .navbar-bg {
-        background: linear-gradient(135deg, #4A5D4E 0%, #2C382E 100%) !important;
+        background: linear-gradient(135deg, #022C22 0%, #064E3B 100%) !important;
         height: 125px !important;
     }
     
     body .main-navbar .nav-link {
-        color: #f4f6f4 !important;
+        color: #E6F4EA !important;
     }
     
     body .main-navbar .nav-link:hover,
@@ -37,25 +39,25 @@
 
     /* Global Section Text & Buttons */
     .section-header h1 {
-        color: var(--sage-dark) !important;
+        color: var(--corp-dark) !important;
         font-weight: 800;
         letter-spacing: -0.75px;
     }
 
-    .btn-premium-sage {
-        background: linear-gradient(135deg, #738B73 0%, #4A5D4E 100%) !important;
+    .btn-premium-corp {
+        background: var(--corp-gradient-1) !important;
         color: #ffffff !important;
         border: none !important;
         border-radius: 12px !important;
         padding: 10px 20px !important;
         font-weight: 600 !important;
-        box-shadow: 0 4px 15px rgba(74, 93, 78, 0.2) !important;
+        box-shadow: 0 4px 15px rgba(5, 150, 105, 0.2) !important;
         transition: all 0.3s ease !important;
     }
 
-    .btn-premium-sage:hover {
+    .btn-premium-corp:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(74, 93, 78, 0.35) !important;
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.35) !important;
         opacity: 0.95;
     }
 
@@ -64,7 +66,7 @@
         border: none !important;
         border-radius: 24px !important;
         background: #ffffff;
-        box-shadow: 0 10px 30px rgba(96, 121, 100, 0.04) !important;
+        box-shadow: 0 10px 30px rgba(2, 44, 34, 0.03) !important;
         overflow: hidden;
     }
 
@@ -77,32 +79,32 @@
 
     .table-modern thead th {
         border: none !important;
-        color: var(--sage-dark) !important;
+        color: var(--corp-dark) !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
         font-size: 11px !important;
         letter-spacing: 0.8px !important;
-        background-color: var(--sage-bg-soft) !important;
+        background-color: var(--corp-bg-soft) !important;
         padding: 16px 14px !important;
     }
 
     .table-modern tbody td {
         padding: 14px !important;
         vertical-align: middle !important;
-        border-top: 1px solid #f1f5f1 !important;
-        border-bottom: 1px solid #f1f5f1 !important;
-        color: #4A534D;
+        border-top: 1px solid var(--corp-border) !important;
+        border-bottom: 1px solid var(--corp-border) !important;
+        color: #064E3B;
         background: #ffffff;
     }
 
     .table-modern tbody tr td:first-child {
-        border-left: 1px solid #f1f5f1 !important;
+        border-left: 1px solid var(--corp-border) !important;
         border-top-left-radius: 16px !important;
         border-bottom-left-radius: 16px !important;
     }
 
     .table-modern tbody tr td:last-child {
-        border-right: 1px solid #f1f5f1 !important;
+        border-right: 1px solid var(--corp-border) !important;
         border-top-right-radius: 16px !important;
         border-bottom-right-radius: 16px !important;
     }
@@ -112,8 +114,8 @@
     }
 
     .table-modern tbody tr:hover td {
-        background-color: var(--sage-bg-soft) !important;
-        border-color: var(--sage-light) !important;
+        background-color: var(--corp-bg-soft) !important;
+        border-color: #A7F3D0 !important;
     }
 
     /* Desain Tombol Opsi Mikro */
@@ -143,7 +145,7 @@
 
     /* Customisasi Tampilan Sampingan DataTables */
     .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-        background: linear-gradient(135deg, #738B73 0%, #4A5D4E 100%) !important;
+        background: var(--corp-gradient-1) !important;
         color: white !important;
         border: none !important;
         border-radius: 8px;
@@ -153,7 +155,7 @@
 <div class="section-header mb-4">
     <h1>Data Supplier</h1>
     <div class="ml-auto">
-        <a href="javascript:void(0)" class="btn btn-premium-sage d-flex align-items-center" id="button_tambah_supplier">
+        <a href="javascript:void(0)" class="btn btn-premium-corp d-flex align-items-center" id="button_tambah_supplier">
             <i class="fa fa-plus mr-2"></i> Tambah Supplier
         </a>
     </div>
@@ -182,7 +184,6 @@
     </div>
 </div>
 
-<!-- Datatables Jquery & Ajax Logic -->
 <script>
     $(document).ready(function() {
         // Inisialisasi Awal DataTable
@@ -200,8 +201,8 @@
             return `
                 <tr class="barang-row" id="index_${value.id}">
                     <td><span class="font-weight-bold text-muted" style="font-size: 13px;">${counter}</span></td>
-                    <td style="font-size: 14px; font-weight: 600; color: var(--sage-dark);">${value.supplier}</td>
-                    <td style="font-size: 13px; color: #6c757d;">${value.alamat}</td>
+                    <td style="font-size: 14px; font-weight: 600; color: var(--corp-dark);">${value.supplier}</td>
+                    <td style="font-size: 13px; color: #047857; font-weight: 500;">${value.alamat}</td>
                     <td class="text-center">
                         <a href="javascript:void(0)" data-id="${value.id}" class="btn btn-action-premium btn-action-edit button_edit_supplier" title="Ubah"><i class="far fa-edit"></i></a>
                         <a href="javascript:void(0)" data-id="${value.id}" class="btn btn-action-premium btn-action-delete button_hapus_supplier" title="Hapus"><i class="fas fa-trash"></i></a>
@@ -361,7 +362,7 @@
                 text: "Data supplier ini akan dihapus permanen!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#4A5D4E',
+                confirmButtonColor: '#059669', /* Diubah ke Emerald */
                 cancelButtonColor: '#dc3545',
                 confirmButtonText: 'Ya, Hapus Data',
                 cancelButtonText: 'Batal'

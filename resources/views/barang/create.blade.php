@@ -56,6 +56,13 @@
                   <input type="number" class="form-control" name="stok_minimum" id="stok_minimum">
                   <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-stok_minimum"></div>
                 </div>
+
+                <!-- INPUT BARU: STOK MAKSIMUM -->
+                <div class="form-group">
+                  <label>Stok Maksimum</label>
+                  <input type="number" class="form-control" name="stok_maximum" id="stok_maksimum">
+                  <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-stok_maksimum"></div>
+                </div>
     
                 <div class="form-group">
                     <label>Deskripsi</label>
@@ -65,7 +72,7 @@
               </div>
             </div>
 
-        </div>
+          </div>
         <div class="modal-footer bg-whitesmoke br">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
           <button type="button" class="btn btn-primary" id="store">Tambah</button>
@@ -75,6 +82,3 @@
     </div>
   </div>
 </div>
-
-
-

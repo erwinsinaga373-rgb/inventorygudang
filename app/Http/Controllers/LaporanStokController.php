@@ -19,17 +19,21 @@ class LaporanStokController extends Controller
     }
 
     /**
-     * Get Data 
+     * Get Data untuk Render Tabel Via AJAX
      */
     public function getData(Request $request)
     {
-        $selectedOption = $request->input('opsi');
+        $selectedOption = $request->input('opsi', 'semua');
 
-        if($selectedOption == 'semua'){
+        if ($selectedOption == 'semua') {
              $barangs = Barang::all();
-        } elseif ($selectedOption == 'minimum'){
-             $barangs = Barang::where('stok', '<=', 10)->get();
-        } elseif ($selectedOption == 'stok-habis'){
+        } elseif ($selectedOption == 'minimum') {
+             // Membandingkan kolom stok secara dinamis dengan kolom stok_minimum di database
+             $barangs = Barang::whereColumn('stok', '<=', 'stok_minimum')->get();
+        } elseif ($selectedOption == 'maksimum') {
+             // SINKRONISASI BARU: Membandingkan kolom stok secara dinamis dengan kolom stok_maksimum
+             $barangs = Barang::whereColumn('stok', '>=', 'stok_maksimum')->get();
+        } elseif ($selectedOption == 'stok-habis') {
              $barangs = Barang::where('stok', 0)->get();
         } else {
              $barangs = Barang::all();
@@ -39,16 +43,20 @@ class LaporanStokController extends Controller
     }
 
     /**
-     * Print Data 
-    */
+     * Print Data Cetak PDF Laporan
+     */
     public function printStok(Request $request)
     {
-        $selectedOption = $request->input('opsi');
+        $selectedOption = $request->input('opsi', 'semua');
 
         if ($selectedOption == 'semua') {
             $barangs = Barang::all();
         } elseif ($selectedOption == 'minimum') {
-            $barangs = Barang::where('stok', '<=', 10)->get();
+            // Disamakan agar hasil cetak PDF akurat sesuai filter batas minimum asli barang
+            $barangs = Barang::whereColumn('stok', '<=', 'stok_minimum')->get();
+        } elseif ($selectedOption == 'maksimum') {
+            // SINKRONISASI BARU: Disamakan agar hasil cetak PDF akurat sesuai filter batas maksimum asli barang
+            $barangs = Barang::whereColumn('stok', '>=', 'stok_maksimum')->get();
         } elseif ($selectedOption == 'stok-habis') {
             $barangs = Barang::where('stok', 0)->get();
         } else {

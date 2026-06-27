@@ -12,8 +12,6 @@ use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-
-
 class BarangController extends Controller
 {
     /**
@@ -57,17 +55,20 @@ class BarangController extends Controller
             'deskripsi'     => 'required',
             'gambar'        => 'required|mimes:jpeg,png,jpg',
             'stok_minimum'  => 'required|numeric',
+            'stok_maksimum' => 'required|numeric',
             'jenis_id'      => 'required',
             'satuan_id'     => 'required'
         ], [
-            'nama_barang.required'  => 'Form Nama Barang Wajib Di Isi !',
-            'deskripsi.required'    => 'Form Deskripsi Wajib Di Isi !',
-            'gambar.required'       => 'Tambahkan Gambar !',
-            'gambar.mimes'          => 'Gunakan Gambar Yang Memiliki Format jpeg, png, jpg !',
-            'stok_minimum.required' => 'Form Stok Minimum Wajib Di Isi !',
-            'stok_minimum.numeric'  => 'Gunakan Angka Untuk Mengisi Form Ini !',
-            'jenis_id.required'     => 'Pilih Jenis Barang !',
-            'satuan_id.required'    => 'Pilih Jenis Barang !'
+            'nama_barang.required'   => 'Form Nama Barang Wajib Di Isi !',
+            'deskripsi.required'     => 'Form Deskripsi Wajib Di Isi !',
+            'gambar.required'        => 'Tambahkan Gambar !',
+            'gambar.mimes'           => 'Gunakan Gambar Yang Memiliki Format jpeg, png, jpg !',
+            'stok_minimum.required'  => 'Form Stok Minimum Wajib Di Isi !',
+            'stok_minimum.numeric'   => 'Gunakan Angka Untuk Mengisi Form Ini !',
+            'stok_maksimum.required' => 'Form Stok Maksimum Wajib Di Isi !',
+            'stok_maksimum.numeric'  => 'Gunakan Angka Untuk Mengisi Form Ini !',
+            'jenis_id.required'      => 'Pilih Jenis Barang !',
+            'satuan_id.required'     => 'Pilih Jenis Barang !'
         ]);
 
         if ($request->hasFile('gambar')) 
@@ -92,14 +93,15 @@ class BarangController extends Controller
         }
 
         $barang = Barang::create([
-            'nama_barang' => $request->nama_barang,
-            'deskripsi'   => $request->deskripsi,
-            'user_id'     => $request->user_id,
-            'kode_barang' => $request->kode_barang,
-            'gambar'      => $path . $fileName,
-            'stok_minimum'=> $request->stok_minimum,
-            'jenis_id'    => $request->jenis_id,
-            'satuan_id'   => $request->satuan_id
+            'nama_barang'  => $request->nama_barang,
+            'deskripsi'    => $request->deskripsi,
+            'user_id'      => $request->user_id,
+            'kode_barang'  => $request->kode_barang,
+            'gambar'       => $path . $fileName,
+            'stok_minimum' => $request->stok_minimum,
+            'stok_maksimum'=> $request->stok_maksimum,
+            'jenis_id'     => $request->jenis_id,
+            'satuan_id'    => $request->satuan_id
         ]);
 
         return response()->json([
@@ -143,21 +145,22 @@ class BarangController extends Controller
             'deskripsi'     => 'required',
             'gambar'        => 'nullable|mimes:jpeg,png,jpg',
             'stok_minimum'  => 'required|numeric',
+            'stok_maksimum' => 'required|numeric',
             'jenis_id'      => 'required',
-            'satuan_id'      => 'required'
+            'satuan_id'     => 'required'
         ], [
-            'nama_barang.required'  => 'Form Nama Barang Wajib Di Isi !',
-            'deskripsi.required'    => 'Form Deskripsi Wajib Di Isi !',
-            'gambar.mimes'          => 'Gunakan Gambar Yang Memiliki Format jpeg, png, jpg !',
-            'stok_minimum.required' => 'Form Stok Minimum Wajib Di Isi !',
-            'stok_minimum.numeric'  => 'Gunakan Angka Untuk Mengisi Form Ini !',
-            'jenis_id.required'     => 'Pilih Jenis Barang !',
-            'satuan_id.required'    => 'Pilih Satuan Barang !'
+            'nama_barang.required'   => 'Form Nama Barang Wajib Di Isi !',
+            'deskripsi.required'     => 'Form Deskripsi Wajib Di Isi !',
+            'gambar.mimes'           => 'Gunakan Gambar Yang Memiliki Format jpeg, png, jpg !',
+            'stok_minimum.required'  => 'Form Stok Minimum Wajib Di Isi !',
+            'stok_minimum.numeric'   => 'Gunakan Angka Untuk Mengisi Form Ini !',
+            'stok_maksimum.required' => 'Form Stok Maksimum Wajib Di Isi !',
+            'stok_maksimum.numeric'  => 'Gunakan Angka Untuk Mengisi Form Ini !',
+            'jenis_id.required'      => 'Pilih Jenis Barang !',
+            'satuan_id.required'     => 'Pilih Satuan Barang !'
         ]);
     
-        // cek apakah gambar diubah atau tidak
         if($request->hasFile('gambar')){
-            // hapus gambar lama
             if($barang->gambar) {
                 unlink('.'.Storage::url($barang->gambar));
             }
@@ -167,20 +170,22 @@ class BarangController extends Controller
             $gambar     = $file->storeAs($path, $fileName, 'public');
             $path      .= $fileName; 
         } else {
-            // jika tidak ada file gambar, gunakan gambar lama
             $validator = Validator::make($request->all(), [
                 'nama_barang'   => 'required',
                 'deskripsi'     => 'required',
                 'stok_minimum'  => 'required|numeric',
+                'stok_maksimum' => 'required|numeric',
                 'jenis_id'      => 'required',
-                'satuan_id'      => 'required'
+                'satuan_id'     => 'required'
             ], [
-                'nama_barang.required'  => 'Form Nama Barang Wajib Di Isi !',
-                'deskripsi.required'    => 'Form Deskripsi Wajib Di Isi !',
-                'stok_minimum.required' => 'Form Stok Minimum Wajib Di Isi !',
-                'stok_minimum.numeric'  => 'Gunakan Angka Untuk Mengisi Form Ini !',
-                'jenis_id.required'     => 'Pilih Jenis Barang !',
-                'satuan_id.required'    => 'Pilih Satuan Barang !'
+                'nama_barang.required'   => 'Form Nama Barang Wajib Di Isi !',
+                'deskripsi.required'     => 'Form Deskripsi Wajib Di Isi !',
+                'stok_minimum.required'  => 'Form Stok Minimum Wajib Di Isi !',
+                'stok_minimum.numeric'   => 'Gunakan Angka Untuk Mengisi Form Ini !',
+                'stok_maksimum.required' => 'Form Stok Maksimum Wajib Di Isi !',
+                'stok_maksimum.numeric'  => 'Gunakan Angka Untuk Mengisi Form Ini !',
+                'jenis_id.required'      => 'Pilih Jenis Barang !',
+                'satuan_id.required'     => 'Pilih Satuan Barang !'
             ]);
 
             $path = $barang->gambar;
@@ -193,6 +198,7 @@ class BarangController extends Controller
         $barang->update([
             'nama_barang'   => $request->nama_barang,
             'stok_minimum'  => $request->stok_minimum, 
+            'stok_maksimum' => $request->stok_maksimum,
             'deskripsi'     => $request->deskripsi,
             'user_id'       => auth()->user()->id,
             'gambar'        => $path,
@@ -220,6 +226,25 @@ class BarangController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data Barang Berhasil Dihapus!'
+        ]);
+    }
+
+    /**
+     * FITUR PENCARIAN GLOBAL NAVBAR (FIXED: RESPON JSON UNTUK AJAX)
+     */
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        // Menyaring data berdasarkan nama barang atau kode barang
+        $barangs = Barang::where('nama_barang', 'LIKE', "%{$keyword}%")
+                         ->orWhere('kode_barang', 'LIKE', "%{$keyword}%")
+                         ->get();
+
+        // Mengembalikan data JSON agar aman ditangkap JavaScript halaman index Anda
+        return response()->json([
+            'success' => true,
+            'data'    => $barangs
         ]);
     }
 }
