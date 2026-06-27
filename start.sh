@@ -180,13 +180,65 @@ PHPFPMCONF
 php-fpm -y /tmp/php-fpm.conf
 
 # =============================================================
-# STEP 9: Start Nginx on Railway-assigned port
+# STEP 9: Generate nginx.conf and start Nginx
 # =============================================================
-# Find mime.types in Nix store (Nixpacks puts it in /nix/store)
-MIME_PATH=$(find /nix/store -name mime.types -path "*/nginx/*" 2>/dev/null | head -1)
-[ -z "$MIME_PATH" ] && MIME_PATH="/etc/nginx/mime.types"
+NGINX_PORT="${PORT:-8080}"
+cat > /tmp/nginx.conf << NGINXCONF
+worker_processes  auto;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+events {
+    worker_connections  1024;
+}
+http {
+    types {
+        text/html                             html htm shtml;
+        text/css                              css;
+        text/xml                              xml;
+        image/gif                             gif;
+        image/jpeg                            jpeg jpg;
+        application/javascript                js;
+        application/json                      json;
+        application/pdf                       pdf;
+        application/zip                       zip;
+        image/png                             png;
+        image/svg+xml                         svg svgz;
+        image/x-icon                          ico;
+        image/webp                            webp;
+        font/woff                             woff;
+        font/woff2                            woff2;
+        application/x-font-ttf                ttf ttc;
+        application/x-font-otf                otf;
+        application/xhtml+xml                 xhtml;
+        audio/mpeg                            mp3;
+        audio/ogg                             ogg;
+        video/mp4                             mp4;
+        video/webm                            webm;
+        text/plain                            txt;
+    }
+    default_type  application/octet-stream;
+    access_log  /var/log/nginx/access.log;
+    sendfile        on;
+    keepalive_timeout  65;
+    server {
+        listen  ${NGINX_PORT};
+        index index.php index.html;
+        server_name  _;
+        root  /app/public;
+        location / {
+            try_files \$uri \$uri/ /index.php\$is_args\$args;
+        }
+        location ~ \.php\$ {
+            fastcgi_pass  127.0.0.1:9000;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME  /app/public\$fastcgi_script_name;
+            include       fastcgi_params;
+        }
+        location ~ /\.(?!well-known).* {
+            deny all;
+        }
+    }
+}
+NGINXCONF
 
-sed -e "s|PORT_PLACEHOLDER|${PORT:-8080}|g" \
-    -e "s|include /etc/nginx/mime.types;|include ${MIME_PATH};|g" \
-    /app/nginx.conf > /tmp/nginx.conf
 nginx -c /tmp/nginx.conf -g 'daemon off;'
