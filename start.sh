@@ -178,6 +178,14 @@ php_admin_value[error_log] = /var/log/php-fpm-www.log
 PHPFPMCONF
 
 php-fpm -y /tmp/php-fpm.conf -t && php-fpm -y /tmp/php-fpm.conf -D
+sleep 1
+if pgrep php-fpm > /dev/null 2>&1; then
+  echo "PHP-FPM is running (PID: $(pgrep php-fpm | head -1))"
+else
+  echo "ERROR: PHP-FPM failed to start!"
+  cat /var/log/php-fpm.log 2>/dev/null || echo "(no php-fpm log)"
+  exit 1
+fi
 
 # =============================================================
 # STEP 9: Generate nginx.conf and start Nginx
@@ -257,4 +265,6 @@ http {
 }
 NGINXCONF
 
-nginx -c /tmp/nginx.conf -g 'daemon off;'
+nginx -t -c /tmp/nginx.conf && nginx -c /tmp/nginx.conf -g 'daemon off;'
+echo "ERROR: Nginx exited unexpectedly!"
+exit 1
